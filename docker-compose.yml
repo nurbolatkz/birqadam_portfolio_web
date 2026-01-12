@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    command: npm run dev -- --host 0.0.0.0
+
+  # Optional: Add a nginx reverse proxy for production use
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./dist:/usr/share/nginx/html
+    depends_on:
+      - app
+    # Only enable this service when you have built the production version
+    # command: /bin/sh -c "nginx -g 'daemon off;'"
+    profiles: ["prod"]
+
+volumes:
+  node_modules:
