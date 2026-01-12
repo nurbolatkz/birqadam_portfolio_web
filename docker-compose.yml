@@ -3,30 +3,14 @@ version: '3.8'
 services:
   app:
     build: .
+    container_name: our-portfolio-app
+    restart: unless-stopped
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5174:5173"  # Биндим на localhost для безопасности
     volumes:
       - .:/app
       - /app/node_modules
     working_dir: /app
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production  # Для продакшена
     command: npm run dev -- --host 0.0.0.0
-
-  # Optional: Add a nginx reverse proxy for production use
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./dist:/usr/share/nginx/html
-    depends_on:
-      - app
-    # Only enable this service when you have built the production version
-    # command: /bin/sh -c "nginx -g 'daemon off;'"
-    profiles: ["prod"]
-
-volumes:
-  node_modules:
