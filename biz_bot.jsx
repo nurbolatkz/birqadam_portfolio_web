@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Check, ChevronDown, Mail, Phone, MessageSquare, Play, Calendar, BarChart3, Bot, FileText, Workflow, Brain, Users, Building2, Shield, Globe, PieChart, Cpu, Timer, Sparkles, Star, MapPin, ArrowRight, X } from "lucide-react";
+import { Check, ChevronDown, Mail, Phone, MessageSquare, Play, Calendar, BarChart3, Bot, FileText, Workflow, Brain, Users, Building2, Shield, Globe, PieChart, Cpu, Timer, Sparkles, Star, MapPin, ArrowRight, X, Menu } from "lucide-react";
 
 /**
  * birqadam.kz — Hyper‑Animated Landing Page (RU/KZ)
@@ -126,8 +126,36 @@ const PricingCard = ({ name, price, popular, features, bestFor, cta = "Get Start
       ))}
     </ul>
     <div className="mt-4 text-xs text-slate-500"><span className="font-semibold">Best for:</span> {bestFor}</div>
-    <PrimaryButton className="mt-6 w-full">{cta}</PrimaryButton>
+    <PrimaryButton className="mt-6 w-full" onClick={() => (window.location.href = "https://t.me/jyldambot")}>{cta}</PrimaryButton>
   </motion.div>
+);
+
+const PrivacyPolicy = ({ t, navigate }) => (
+  <div className="py-20">
+    <Container>
+      <button onClick={() => navigate('/')} className="mb-8 inline-flex items-center gap-2 text-indigo-600 hover:underline">
+        <ArrowRight className="h-4 w-4 rotate-180" /> На главную
+      </button>
+      <h1 className="text-3xl font-bold mb-8">{t.privacy.title}</h1>
+      <div className="prose prose-slate max-w-none whitespace-pre-line text-slate-700">
+        {t.privacy.content}
+      </div>
+    </Container>
+  </div>
+);
+
+const TermsOfService = ({ t, navigate }) => (
+  <div className="py-20">
+    <Container>
+      <button onClick={() => navigate('/')} className="mb-8 inline-flex items-center gap-2 text-indigo-600 hover:underline">
+        <ArrowRight className="h-4 w-4 rotate-180" /> На главную
+      </button>
+      <h1 className="text-3xl font-bold mb-8">{t.terms.title}</h1>
+      <div className="prose prose-slate max-w-none whitespace-pre-line text-slate-700">
+        {t.terms.content}
+      </div>
+    </Container>
+  </div>
 );
 
 const Divider = () => <div className="my-20 h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"/>;
@@ -143,6 +171,20 @@ function BizBotLanding() {
   const [showVideo, setShowVideo] = useState(false);
   const heroMotion = useParallaxTitle();
   const [lang, setLang] = useState('ru');
+  const [route, setRoute] = useState(window.location.pathname);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handlePopState = () => setRoute(window.location.pathname);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = (path) => {
+    window.history.pushState({}, '', path);
+    setRoute(path);
+    window.scrollTo(0, 0);
+  };
 
   // i18n dictionary — full RU/KZ content
   const i18n = {
@@ -371,7 +413,48 @@ function BizBotLanding() {
       finalCTA: { h: 'Готовы автоматизировать бизнес?', s: 'Запишитесь на бесплатный аудит — посчитаем, сколько времени и денег вы сэкономите.', p: 'Бесплатный аудит', g: 'Смотреть примеры', chips: ['Без карты', '14 дней бесплатно', 'Гарантия возврата'] },
       footerTag: 'Автоматизация и разработка с ИИ в Казахстане',
       footerLinks: ['Услуги', 'Проекты', 'Как работаем', 'Цены', 'Технологии', 'Доп. решения', 'FAQ'],
-      misc: { close: 'Закрыть', haveQuestions: 'Есть вопросы? Напишите нам в Telegram', openChat: 'Открыть чат' }
+      misc: { close: 'Закрыть', haveQuestions: 'Есть вопросы? Напишите нам в Telegram', openChat: 'Открыть чат' },
+      privacy: {
+        title: 'Политика конфиденциальности',
+        content: `Настоящая Политика конфиденциальности описывает, как birqadam.kz собирает, использует и защищает вашу информацию.
+
+1. Сбор информации
+Мы собираем информацию, которую вы предоставляете напрямую нам через формы на сайте, включая ваше имя и номер телефона.
+
+2. Использование информации
+Мы используем вашу информацию исключительно для:
+- Связи с вами по вашему запросу.
+- Предоставления информации о наших услугах.
+- Улучшения работы нашего сайта.
+
+3. Защита данных
+Мы принимаем технические и организационные меры для защиты ваших персональных данных от несанкционированного доступа, изменения или удаления.
+
+4. Передача третьим лицам
+Мы не продаем и не передаем ваши персональные данные третьим лицам, за исключением случаев, предусмотренных законодательством Республики Казахстан.
+
+5. Ваши права
+Вы имеете право запросить доступ к вашим данным или их удаление, связавшись с нами по указанным контактам.`
+      },
+      terms: {
+        title: 'Пользовательское соглашение',
+        content: `Используя сайт birqadam.kz, вы соглашаетесь с условиями настоящего Соглашения.
+
+1. Общие положения
+Сайт предоставляет информацию об услугах ИП Calipso в области автоматизации и ИИ-решений.
+
+2. Использование сайта
+Вы обязуетесь использовать сайт только в законных целях и не предпринимать действий, которые могут нарушить его работу.
+
+3. Интеллектуальная собственность
+Весь контент на сайте является собственностью birqadam.kz или используется с разрешения правообладателей.
+
+4. Ограничение ответственности
+Мы прилагаем все усилия для обеспечения точности информации, но не гарантируем отсутствие ошибок. Мы не несем ответственности за любые прямые или косвенные убытки, возникшие в результате использования сайта.
+
+5. Изменения условий
+Мы оставляем за собой право изменять условия настоящего соглашения в любое время. Изменения вступают в силу с момента их публикации на сайте.`
+      }
     },
     kk: {
       nav: { services: 'Қызметтер', about: 'Біз туралы', projects: 'Жобалар', cases: 'Кейстер', how: 'Қалай жұмыс істейміз', pricing: 'Баға', faq: 'FAQ', contact: 'Байланыс' },
@@ -580,7 +663,48 @@ function BizBotLanding() {
       finalCTA: { h: 'Бизнесіңізді автоматтандыруға дайынсыз ба?', s: 'Тегін аудитке жазылыңыз — нақты уақыт пен шығын үнемін есептейміз.', p: 'Тегін аудит', g: 'Мысалдарды көру', chips: ['Карта қажет емес', '14 күн тегін', 'Қайтарым кепілдігі'] },
       footerTag: 'Қазақстандағы AI автоматтандыру және әзірлеу',
       footerLinks: ['Қызметтер', 'Жобалар', 'Қалай жұмыс істейміз', 'Баға', 'Технологиялар', 'Қос. шешімдер', 'FAQ'],
-      misc: { close: 'Жабу', haveQuestions: 'Сұрақ бар ма? Telegram‑ға жазыңыз', openChat: 'Чатты ашу' }
+      misc: { close: 'Жабу', haveQuestions: 'Сұрақ бар ма? Telegram‑ға жазыңыз', openChat: 'Чатты ашу' },
+      privacy: {
+        title: 'Құпиялылық саясаты',
+        content: `Бұл Құпиялылық саясаты birqadam.kz сіздің ақпаратыңызды қалай жинайтынын, пайдаланатынын және қорғайтынын сипаттайды.
+
+1. Ақпаратты жинау
+Біз сіз сайттағы формалар арқылы тікелей беретін ақпаратты, соның ішінде атыңыз бен телефон нөміріңізді жинаймыз.
+
+2. Ақпаратты пайдалану
+Біз сіздің ақпаратыңызды тек мына мақсаттарда пайдаланамыз:
+- Сіздің сұранысыңыз бойынша сізбен байланысу.
+- Біздің қызметтеріміз туралы ақпарат беру.
+- Сайтымыздың жұмысын жақсарту.
+
+3. Деректерді қорғау
+Біз сіздің жеке деректеріңізді рұқсатсыз кіруден, өзгертуден немесе жоюдан қорғау үшін техникалық және ұйымдастырушылық шараларды қолданамыз.
+
+4. Үшінші тұлғаларға беру
+Біз сіздің жеке деректеріңізді үшінші тұлғаларға сатпаймыз және бермейміз, Қазақстан Республикасының заңнамасында көзделген жағдайларды қоспағанда.
+
+5. Сіздің құқықтарыңыз
+Сіз көрсетілген контактілер арқылы бізге хабарласып, деректеріңізге кіруді немесе оларды жоюды талап етуге құқылысыз.`
+      },
+      terms: {
+        title: 'Пайдаланушы келісімі',
+        content: `birqadam.kz сайтын пайдалану арқылы сіз осы Келісімнің шарттарымен келісесіз.
+
+1. Жалпы ережелер
+Сайт «ИП Calipso» автоматтандыру және AI шешімдері саласындағы қызметтері туралы ақпарат береді.
+
+2. Сайтты пайдалану
+Сіз сайтты тек заңды мақсаттарда пайдалануға және оның жұмысын бұзуы мүмкін әрекеттерді жасамауға міндеттенесіз.
+
+3. Зияткерлік меншік
+Сайттағы барлық мазмұн birqadam.kz меншігі болып табылады немесе құқық иелерінің рұқсатымен пайдаланылады.
+
+4. Жауапкершілікті шектеу
+Біз ақпараттың дәлдігін қамтамасыз ету үшін бар күшімізді саламыз, бірақ қателердің болмауына кепілдік бермейміз. Біз сайтты пайдалану нәтижесінде туындаған кез келген тікелей немесе жанама шығындар үшін жауап бермейміз.
+
+5. Шарттарды өзгерту
+Біз осы келісімнің шарттарын кез келген уақытта өзгертуге құқылымыз. Өзгерістер сайтта жарияланған сәттен бастап күшіне енеді.`
+      }
     }
   };
 
@@ -598,34 +722,84 @@ function BizBotLanding() {
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-white text-slate-900">
       {/* Navigation */}
-      <header className="sticky top-0 z-40 backdrop-blur">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
         <Container>
-          <div className="flex items-center justify-between border-b border-white/60 py-4">
-            <a href="#top" className="flex items-center gap-2">
+          <div className="flex items-center justify-between py-4">
+            <button onClick={() => navigate('/')} className="flex items-center gap-2 flex-shrink-0">
               <motion.div initial={{ rotate: -10, scale: 0.9 }} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 120 }} className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white shadow">
                 <Bot className="h-5 w-5" />
               </motion.div>
-              <span className="font-bold tracking-tight">birqadam.kz</span>
-            </a>
-            <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
-              <a href="#services" className="hover:text-slate-900">{t.nav.services}</a>
-              <a href="#about" className="hover:text-slate-900">{t.nav.about}</a>
-              <a href="#projects" className="hover:text-slate-900">{t.nav.projects}</a>
-              <a href="#how" className="hover:text-slate-900">{t.nav.how}</a>
-              <a href="#pricing" className="hover:text-slate-900">{t.nav.pricing}</a>
-              <a href="#faq" className="hover:text-slate-900">{t.nav.faq}</a>
+              <span className="font-bold tracking-tight text-slate-900">birqadam.kz</span>
+            </button>
+
+            <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.services}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.about}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('projects')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.projects}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('how')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.how}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('pricing')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.pricing}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-indigo-600 transition-colors">{t.nav.faq}</button>
             </nav>
-            <div className="flex items-center gap-3">
-              <button onClick={() => setLang(lang === 'ru' ? 'kk' : 'ru')} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">{lang === 'ru' ? 'KZ' : 'RU'}</button>
-              <GhostButton onClick={() => (window.location.href = "https://t.me/jyldambot")}>{t.nav.contact} <ArrowRight className="h-4 w-4"/></GhostButton>
-              <PrimaryButton onClick={() => (window.location.href = "https://t.me/jyldambot")}>{t.ctaPrimary} <Calendar className="h-4 w-4"/></PrimaryButton>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button 
+                onClick={() => setLang(lang === 'ru' ? 'kk' : 'ru')} 
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 text-xs font-bold hover:bg-slate-50 transition-colors"
+              >
+                {lang === 'ru' ? 'KZ' : 'RU'}
+              </button>
+              
+              <PrimaryButton 
+                onClick={() => (window.location.href = "https://t.me/jyldambot")}
+                className="hidden sm:inline-flex py-2 px-4 text-sm"
+              >
+                {t.ctaPrimary}
+              </PrimaryButton>
+
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="inline-flex md:hidden items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+              >
+                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           </div>
         </Container>
+
+        {/* Mobile Menu Overlay */}
+        <motion.div
+          initial={false}
+          animate={{ height: isMenuOpen ? "auto" : 0, opacity: isMenuOpen ? 1 : 0 }}
+          className="md:hidden overflow-hidden bg-white border-t border-slate-100 shadow-xl"
+        >
+          <Container className="py-6 flex flex-col gap-4">
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.services}</button>
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('about')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.about}</button>
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('projects')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.projects}</button>
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('how')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.how}</button>
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('pricing')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.pricing}</button>
+            <button onClick={() => { navigate('/'); setIsMenuOpen(false); setTimeout(() => document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left py-2 text-base font-medium text-slate-700 hover:text-indigo-600 transition-colors border-b border-slate-50">{t.nav.faq}</button>
+            
+            <div className="pt-2 flex flex-col gap-3">
+              <PrimaryButton onClick={() => (window.location.href = "https://t.me/jyldambot")} className="w-full">
+                {t.ctaPrimary} <Calendar className="h-4 w-4 ml-2"/>
+              </PrimaryButton>
+              <GhostButton onClick={() => (window.location.href = "https://t.me/jyldambot")} className="w-full">
+                {t.nav.contact} <ArrowRight className="h-4 w-4 ml-2"/>
+              </GhostButton>
+            </div>
+          </Container>
+        </motion.div>
       </header>
 
-      {/* HERO */}
-      <section id="top" className="relative overflow-hidden pb-24 pt-20 sm:pt-28">
+      {route === '/privacy' ? (
+        <PrivacyPolicy t={t} navigate={navigate} />
+      ) : route === '/terms' ? (
+        <TermsOfService t={t} navigate={navigate} />
+      ) : (
+        <>
+          {/* HERO */}
+          <section id="top" className="relative overflow-hidden pb-24 pt-20 sm:pt-28">
         <AnimatedBackdrop />
         <Container>
           <div className="grid items-center gap-10 lg:grid-cols-2">
@@ -1058,6 +1232,8 @@ function BizBotLanding() {
           </div>
         </Container>
       </section>
+      </>
+      )}
 
       {/* FOOTER */}
       <footer className="py-12">
@@ -1065,22 +1241,26 @@ function BizBotLanding() {
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white">
+                <button onClick={() => navigate('/')} className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white">
                   <Bot className="h-5 w-5" />
-                </div>
+                </button>
                 <span className="font-bold">birqadam.kz</span>
               </div>
               <p className="mt-3 text-sm text-slate-600">{t.footerTag}</p>
+              <div className="mt-4 flex flex-col gap-2">
+                <button onClick={() => navigate('/privacy')} className="text-left text-xs text-slate-500 hover:text-indigo-600">{t.privacy.title}</button>
+                <button onClick={() => navigate('/terms')} className="text-left text-xs text-slate-500 hover:text-indigo-600">{t.terms.title}</button>
+              </div>
             </div>
             <div>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <a href="#services" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[0]}</a>
-                <a href="#projects" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[1]}</a>
-                <a href="#how" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[2]}</a>
-                <a href="#pricing" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[3]}</a>
-                <a href="#tech" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[4]}</a>
-                <a href="#add-ons" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[5]}</a>
-                <a href="#faq" className="text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[6]}</a>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[0]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('projects')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[1]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('how')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[2]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('pricing')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[3]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('tech')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[4]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('add-ons')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[5]}</button>
+                <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="text-left text-sm text-slate-600 hover:text-slate-900">{t.footerLinks[6]}</button>
               </div>
             </div>
           </div>
